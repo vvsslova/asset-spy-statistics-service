@@ -28,6 +28,7 @@ public class ProductItemStatusEntity {
     private Long id;
 
     private String status;
+
     private OffsetDateTime statusTransitionTime;
 
     @ManyToOne

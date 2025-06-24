@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,13 +19,13 @@ public class StatisticsDataProviderImpl implements StatisticsDataProvider {
 
     @Override
     @Transactional(readOnly = true)
-    public Stream<ProductEntity> getAllProductsAsStream() {
-        return productRepository.streamAllWithVendors();
+    public List<ProductEntity> getAllProducts() {
+        return productRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Stream<ProductItemStatusEntity> getAllStatusesAsStream() {
-        return statusRepository.streamAllWithRelations();
+    public List<ProductItemStatusEntity> getAllStatuses() {
+        return statusRepository.findAll();
     }
 }

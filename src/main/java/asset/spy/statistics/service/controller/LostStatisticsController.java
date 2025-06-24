@@ -2,7 +2,7 @@ package asset.spy.statistics.service.controller;
 
 
 import asset.spy.statistics.service.dto.LostRateStatisticDto;
-import asset.spy.statistics.service.service.StatisticsService;
+import asset.spy.statistics.service.service.LostRateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,25 +15,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LostStatisticsController {
 
-    private final StatisticsService statisticsService;
+    private final LostRateService lostRateService;
 
     @GetMapping("/overall")
     public Double getOverallLostRate() {
-        return statisticsService.getLostRateOverall();
+        return lostRateService.getOverallLostRate();
     }
 
     @GetMapping("/vendor")
     public List<LostRateStatisticDto> getLostRateByVendor() {
-        return statisticsService.getLostRateByVendor();
+        return lostRateService.getByVendor();
     }
 
     @GetMapping("/product-type")
     public List<LostRateStatisticDto> getLostRateByProductType() {
-        return statisticsService.getLostRateByProductType();
+        return lostRateService.getByProductType();
     }
 
     @GetMapping("/vendor-product")
     public List<LostRateStatisticDto> getLostRateByVendorAndProductType() {
-        return statisticsService.getLostRateByVendorAndProductType();
+        return lostRateService.getByVendorAndProductType();
     }
 }

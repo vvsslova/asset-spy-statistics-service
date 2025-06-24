@@ -1,7 +1,7 @@
 package asset.spy.statistics.service.controller;
 
 import asset.spy.statistics.service.dto.DefectiveRateStatisticDto;
-import asset.spy.statistics.service.service.StatisticsService;
+import asset.spy.statistics.service.service.DefectRateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,25 +14,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefectiveStatisticsController {
 
-    private final StatisticsService statisticsService;
+    private final DefectRateService defectRateService;
 
     @GetMapping("/overall")
     public Double getOverallDefectRate() {
-        return statisticsService.getDefectRateOverall();
+        return defectRateService.getOverallDefectRate();
     }
 
     @GetMapping("/vendor")
     public List<DefectiveRateStatisticDto> getDefectRateByVendor() {
-        return statisticsService.getDefectRateByVendor();
+        return defectRateService.getByVendor();
     }
 
     @GetMapping("/product-type")
     public List<DefectiveRateStatisticDto> getDefectRateByProductType() {
-        return statisticsService.getDefectRateByProductType();
+        return defectRateService.getByProductType();
     }
 
     @GetMapping("/vendor-product")
     public List<DefectiveRateStatisticDto> getDefectRateByVendorAndProductType() {
-        return statisticsService.getDefectRateByVendorAndProductType();
+        return defectRateService.getByVendorAndProductType();
     }
 }

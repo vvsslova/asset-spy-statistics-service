@@ -1,14 +1,16 @@
 package asset.spy.statistics.service.entity;
 
+import java.util.Optional;
+
 public enum ProductItemStatus {
     DEFECTIVE,
     LOST;
 
-    public static ProductItemStatus fromString(String rawStatus) {
+    public static Optional<ProductItemStatus> fromString(String rawStatus) {
         try {
-            return ProductItemStatus.valueOf(rawStatus.toUpperCase());
+            return Optional.of(valueOf(rawStatus.toUpperCase()));
         } catch (IllegalArgumentException | NullPointerException e) {
-            return null;
+            return Optional.empty();
         }
     }
 }

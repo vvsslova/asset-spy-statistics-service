@@ -26,6 +26,7 @@ public class ProductEntity {
     private Long id;
 
     private String type;
+
     private BigDecimal price;
 
     @ManyToOne
