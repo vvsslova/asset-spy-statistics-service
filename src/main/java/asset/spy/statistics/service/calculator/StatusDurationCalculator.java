@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @Component
 public class StatusDurationCalculator implements StatisticsCalculator<ProductItemStatusEntity, Map<String, Duration>> {
 
+    private static final String OVERALL_GROUP_KEY = "OVERALL";
+
     @Override
     public Map<String, Map<String, Duration>> calculateGrouped(List<ProductItemStatusEntity> statuses,
                                                                Predicate<ProductItemStatusEntity> filter,
@@ -71,8 +73,8 @@ public class StatusDurationCalculator implements StatisticsCalculator<ProductIte
     }
 
     private Map<String, Duration> calculateOverallDurations(List<ProductItemStatusEntity> statuses) {
-        Map<String, Map<String, Duration>> result = calculate(statuses, s -> "OVERALL");
-        return result.get("OVERALL");
+        Map<String, Map<String, Duration>> result = calculate(statuses, s -> OVERALL_GROUP_KEY);
+        return result.get(OVERALL_GROUP_KEY);
     }
 
     private Duration averageDuration(List<Duration> durations) {

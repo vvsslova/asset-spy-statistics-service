@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 @Component
 public class ItemRateCalculator implements StatisticsCalculator<ProductItemStatusEntity, Double> {
 
+    private static final double EMPTY_RATE = 0.0;
+    private static final double PERCENT_COEFFICIENT = 100.0;
+
     @Override
     public Map<String, Double> calculateGrouped(List<ProductItemStatusEntity> data,
                                                 Predicate<ProductItemStatusEntity> filter,
@@ -72,7 +75,7 @@ public class ItemRateCalculator implements StatisticsCalculator<ProductItemStatu
     }
 
     private double calculatePercentage(Set<UUID> total, Set<UUID> matched) {
-        if (total.isEmpty()) return 0.0;
-        return (double) matched.size() / total.size() * 100.0;
+        if (total.isEmpty()) return EMPTY_RATE;
+        return (double) matched.size() / total.size() * PERCENT_COEFFICIENT;
     }
 }

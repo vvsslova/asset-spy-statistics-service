@@ -1,19 +1,22 @@
 package asset.spy.statistics.service.util;
 
 import java.time.Duration;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DurationFormatter {
 
     public static String formatDurationToReadable(Duration duration) {
-        long hours = duration.toHours();
-        long minutes = duration.minusHours(hours).toMinutes();
-        long seconds = duration.minusHours(hours).minusMinutes(minutes).getSeconds();
+        long hours = duration.toHoursPart();
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
 
-        StringBuilder sb = new StringBuilder();
-        if (hours > 0) sb.append(hours).append("h ");
-        if (minutes > 0) sb.append(minutes).append("m ");
-        if (seconds > 0 || sb.isEmpty()) sb.append(seconds).append("s");
-
-        return sb.toString().trim();
+        return Stream.of(
+                        hours > 0 ? hours + "h" : null,
+                        minutes > 0 ? minutes + "m" : null,
+                        (seconds > 0 || (hours == 0 && minutes == 0)) ? seconds + "s" : null
+                ).filter(Objects::nonNull)
+                .collect(Collectors.joining(" "));
     }
 }

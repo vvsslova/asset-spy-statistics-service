@@ -7,7 +7,6 @@ import java.util.function.Function;
 
 public final class ProductKeyMappers {
 
-    // For ProductEntity
     public static Function<ProductEntity, String> byVendorForProduct() {
         return p -> p.getVendor().getName();
     }
@@ -20,7 +19,6 @@ public final class ProductKeyMappers {
         return p -> byVendorForProduct().apply(p) + " - " + byProductTypeForProduct().apply(p);
     }
 
-    // For ProductItemStatusEntity
     public static Function<ProductItemStatusEntity, String> byVendorForStatus() {
         return s -> s.getProductItem().getProduct().getVendor().getName();
     }
