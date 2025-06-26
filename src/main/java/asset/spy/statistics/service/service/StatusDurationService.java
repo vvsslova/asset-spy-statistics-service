@@ -4,7 +4,6 @@ import asset.spy.statistics.service.dto.StatusDurationStatisticDto;
 import asset.spy.statistics.service.entity.ProductItemStatusEntity;
 import asset.spy.statistics.service.mapper.StatisticsDtoMapper;
 import asset.spy.statistics.service.calculator.StatusDurationCalculator;
-import asset.spy.statistics.service.util.ProductKeyMappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,21 +22,23 @@ public class StatusDurationService implements GroupedStatisticsService<StatusDur
 
     @Override
     public List<StatusDurationStatisticDto> getByVendor() {
-        return mapper.mapStatusesDurations(calculateGroupedStatusDurations(ProductKeyMappers.byVendorForStatus()));
+        return mapper.mapGroupedStatusDurations(calculateGroupedStatusDurations(ProductItemStatusEntity::getVendorKey));
     }
 
     @Override
     public List<StatusDurationStatisticDto> getByProductType() {
-        return mapper.mapStatusesDurations(calculateGroupedStatusDurations(ProductKeyMappers.byProductTypeForStatus()));
+        return mapper.mapGroupedStatusDurations(calculateGroupedStatusDurations(
+                ProductItemStatusEntity::getProductTypeKey));
     }
 
     @Override
     public List<StatusDurationStatisticDto> getByVendorAndProductType() {
-        return mapper.mapStatusesDurations(calculateGroupedStatusDurations(ProductKeyMappers.byVendorAndProductTypeForStatus()));
+        return mapper.mapGroupedStatusDurations(calculateGroupedStatusDurations(
+                ProductItemStatusEntity::getVendorAndProductTypeKey));
     }
 
     public List<StatusDurationStatisticDto> getOverallStatusDuration() {
-        return mapper.mapSingleStatusDuration(
+        return mapper.mapOverallStatusDurations(
                 statusDurationCalculator.calculateOverall(
                         dataProvider.getAllStatuses(),
                         s -> true

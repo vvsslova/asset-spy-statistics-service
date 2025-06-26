@@ -9,6 +9,7 @@ import asset.spy.statistics.service.util.DurationFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -19,39 +20,41 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StatisticsDtoMapper {
 
-    public List<DefectiveRateStatisticDto> mapDefectRates(Map<String, Double> data) {
-        return mapRates(data, DefectiveRateStatisticDto::new);
+    public List<DefectiveRateStatisticDto> mapDefectRates(Map<String, Double> defectRatesByGroup) {
+        return mapStatisticsByGroup(defectRatesByGroup, DefectiveRateStatisticDto::new);
     }
 
-    public List<LostRateStatisticDto> mapLostRates(Map<String, Double> data) {
-        return mapRates(data, LostRateStatisticDto::new);
+    public List<LostRateStatisticDto> mapLostRates(Map<String, Double> lostRatesByGroup) {
+        return mapStatisticsByGroup(lostRatesByGroup, LostRateStatisticDto::new);
     }
 
-    public List<AveragePriceStatisticDto> mapAveragePrices(Map<String, java.math.BigDecimal> data) {
-        return mapRates(data, AveragePriceStatisticDto::new);
+    public List<AveragePriceStatisticDto> mapAveragePrices(Map<String, BigDecimal> averagePricesByGroup) {
+        return mapStatisticsByGroup(averagePricesByGroup, AveragePriceStatisticDto::new);
     }
 
-    public List<StatusDurationStatisticDto> mapStatusesDurations(Map<String, Map<String, Duration>> raw) {
-        return raw.entrySet().stream()
-                .flatMap(e -> e.getValue().entrySet().stream()
-                        .map(status -> new StatusDurationStatisticDto(
-                                e.getKey(),
-                                status.getKey(),
-                                DurationFormatter.formatDurationToReadable(status.getValue())
+    public List<StatusDurationStatisticDto> mapGroupedStatusDurations(Map<String, Map<String,
+            Duration>> statusDurationsByGroup) {
+        return statusDurationsByGroup.entrySet().stream()
+                .flatMap(groupEntry -> groupEntry.getValue().entrySet().stream()
+                        .map(statusEntry -> new StatusDurationStatisticDto(
+                                groupEntry.getKey(),
+                                statusEntry.getKey(),
+                                DurationFormatter.formatDurationToReadable(statusEntry.getValue())
                         ))
                 ).collect(Collectors.toList());
     }
 
-    public List<StatusDurationStatisticDto> mapSingleStatusDuration(Map<String, Duration> raw) {
-        return raw.entrySet().stream()
-                .map(e -> new StatusDurationStatisticDto("overall", e.getKey(),
-                        DurationFormatter.formatDurationToReadable(e.getValue())))
+    public List<StatusDurationStatisticDto> mapOverallStatusDurations(Map<String, Duration> overallDurationsByStatus) {
+        return overallDurationsByStatus.entrySet().stream()
+                .map(entry -> new StatusDurationStatisticDto("overall", entry.getKey(),
+                        DurationFormatter.formatDurationToReadable(entry.getValue())))
                 .collect(Collectors.toList());
     }
 
-    private <T extends GroupedDto, V> List<T> mapRates(Map<String, V> data, BiFunction<String, V, T> constructor) {
-        return data.entrySet().stream()
-                .map(e -> constructor.apply(e.getKey(), e.getValue()))
+    private <T extends GroupedDto, V> List<T> mapStatisticsByGroup(Map<String, V> valuesByGroup ,
+                                                                   BiFunction<String, V, T> dtoFactory ) {
+        return valuesByGroup.entrySet().stream()
+                .map(entry -> dtoFactory.apply(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 }

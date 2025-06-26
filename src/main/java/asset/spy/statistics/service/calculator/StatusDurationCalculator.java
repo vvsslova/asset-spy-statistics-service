@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Component
 public class StatusDurationCalculator implements StatisticsCalculator<ProductItemStatusEntity, Map<String, Duration>> {
@@ -35,11 +34,23 @@ public class StatusDurationCalculator implements StatisticsCalculator<ProductIte
     private Map<String, Map<String, Duration>> calculate(
             List<ProductItemStatusEntity> statuses,
             Function<ProductItemStatusEntity, String> groupKeyMapper) {
-        Map<UUID, List<ProductItemStatusEntity>> groupedByItem = new HashMap<>();
 
+        Map<UUID, List<ProductItemStatusEntity>> groupedByItem = groupByItemId(statuses);
+        Map<String, Map<String, List<Duration>>> durations = groupStatusDurations(groupedByItem, groupKeyMapper);
+        return averageDurationByGroup(durations);
+    }
+
+    private Map<UUID, List<ProductItemStatusEntity>> groupByItemId(List<ProductItemStatusEntity> statuses) {
+        Map<UUID, List<ProductItemStatusEntity>> grouped = new HashMap<>();
         for (ProductItemStatusEntity status : statuses) {
-            groupedByItem.computeIfAbsent(status.getProductItem().getId(), k -> new ArrayList<>()).add(status);
+            grouped.computeIfAbsent(status.getProductItem().getId(), k -> new ArrayList<>()).add(status);
         }
+        return grouped;
+    }
+
+    private Map<String, Map<String, List<Duration>>> groupStatusDurations(
+            Map<UUID, List<ProductItemStatusEntity>> groupedByItem,
+            Function<ProductItemStatusEntity, String> groupKeyMapper) {
 
         Map<String, Map<String, List<Duration>>> durations = new HashMap<>();
 
@@ -60,16 +71,21 @@ public class StatusDurationCalculator implements StatisticsCalculator<ProductIte
                         .add(duration);
             }
         }
+        return durations;
+    }
 
-        return durations.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue().entrySet().stream()
-                                .collect(Collectors.toMap(
-                                        Map.Entry::getKey,
-                                        ee -> averageDuration(ee.getValue())
-                                ))
-                ));
+    private Map<String, Map<String, Duration>> averageDurationByGroup(Map<String, Map<String, List<Duration>>> durations) {
+        Map<String, Map<String, Duration>> result = new HashMap<>();
+
+        for (var groupEntry : durations.entrySet()) {
+            Map<String, Duration> statusAverages = new HashMap<>();
+
+            for (var statusEntry : groupEntry.getValue().entrySet()) {
+                statusAverages.put(statusEntry.getKey(), averageDuration(statusEntry.getValue()));
+            }
+            result.put(groupEntry.getKey(), statusAverages);
+        }
+        return result;
     }
 
     private Map<String, Duration> calculateOverallDurations(List<ProductItemStatusEntity> statuses) {

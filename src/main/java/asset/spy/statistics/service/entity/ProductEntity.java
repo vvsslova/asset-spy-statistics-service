@@ -32,4 +32,16 @@ public class ProductEntity {
     @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
     private VendorEntity vendor;
+
+    public String getVendorKey() {
+        return vendor.getName();
+    }
+
+    public String getProductTypeKey() {
+        return type;
+    }
+
+    public String getVendorAndProductTypeKey() {
+        return getVendorKey() + " - " + getProductTypeKey();
+    }
 }

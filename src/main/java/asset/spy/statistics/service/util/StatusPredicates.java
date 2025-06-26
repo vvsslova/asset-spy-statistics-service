@@ -1,6 +1,6 @@
 package asset.spy.statistics.service.util;
 
-import asset.spy.statistics.service.entity.ProductItemStatus;
+import asset.spy.statistics.service.model.ProductItemStatus;
 import asset.spy.statistics.service.entity.ProductItemStatusEntity;
 
 import java.util.function.Predicate;

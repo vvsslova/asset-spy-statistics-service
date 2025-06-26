@@ -4,7 +4,6 @@ import asset.spy.statistics.service.dto.AveragePriceStatisticDto;
 import asset.spy.statistics.service.entity.ProductEntity;
 import asset.spy.statistics.service.mapper.StatisticsDtoMapper;
 import asset.spy.statistics.service.calculator.PriceCalculator;
-import asset.spy.statistics.service.util.ProductKeyMappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,17 +22,17 @@ public class AveragePriceService implements GroupedStatisticsService<AveragePric
 
     @Override
     public List<AveragePriceStatisticDto> getByVendor() {
-        return mapper.mapAveragePrices(calculateGroupedAveragePrice(ProductKeyMappers.byVendorForProduct()));
+        return mapper.mapAveragePrices(calculateGroupedAveragePrice(ProductEntity::getVendorKey));
     }
 
     @Override
     public List<AveragePriceStatisticDto> getByProductType() {
-        return mapper.mapAveragePrices(calculateGroupedAveragePrice(ProductKeyMappers.byProductTypeForProduct()));
+        return mapper.mapAveragePrices(calculateGroupedAveragePrice(ProductEntity::getProductTypeKey));
     }
 
     @Override
     public List<AveragePriceStatisticDto> getByVendorAndProductType() {
-        return mapper.mapAveragePrices(calculateGroupedAveragePrice(ProductKeyMappers.byVendorAndProductTypeForProduct()));
+        return mapper.mapAveragePrices(calculateGroupedAveragePrice(ProductEntity::getVendorAndProductTypeKey));
     }
 
     private Map<String, BigDecimal> calculateGroupedAveragePrice(Function<ProductEntity, String> keyMapper) {

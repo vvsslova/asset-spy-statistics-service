@@ -40,14 +40,14 @@ public class ItemRateCalculator implements StatisticsCalculator<ProductItemStatu
         Map<String, Set<UUID>> matching = new HashMap<>();
 
         for (ProductItemStatusEntity status : statuses) {
-            if (status.getProductItem() == null) continue;
+            if (status.getProductItem() != null) {
+                UUID itemId = status.getProductItem().getId();
+                String groupKey = keyMapper.apply(status);
 
-            UUID id = status.getProductItem().getId();
-            String key = keyMapper.apply(status);
-
-            total.computeIfAbsent(key, k -> new HashSet<>()).add(id);
-            if (filter.test(status)) {
-                matching.computeIfAbsent(key, k -> new HashSet<>()).add(id);
+                total.computeIfAbsent(groupKey, k -> new HashSet<>()).add(itemId);
+                if (filter.test(status)) {
+                    matching.computeIfAbsent(groupKey, k -> new HashSet<>()).add(itemId);
+                }
             }
         }
         return total.entrySet().stream()

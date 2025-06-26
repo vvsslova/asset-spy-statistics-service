@@ -4,7 +4,6 @@ import asset.spy.statistics.service.dto.DefectiveRateStatisticDto;
 import asset.spy.statistics.service.entity.ProductItemStatusEntity;
 import asset.spy.statistics.service.mapper.StatisticsDtoMapper;
 import asset.spy.statistics.service.calculator.ItemRateCalculator;
-import asset.spy.statistics.service.util.ProductKeyMappers;
 import asset.spy.statistics.service.util.StatusPredicates;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,17 +22,17 @@ public class DefectRateService implements GroupedStatisticsService<DefectiveRate
 
     @Override
     public List<DefectiveRateStatisticDto> getByVendor() {
-        return mapper.mapDefectRates(calculateGroupedDefectRate(ProductKeyMappers.byVendorForStatus()));
+        return mapper.mapDefectRates(calculateGroupedDefectRate(ProductItemStatusEntity::getVendorKey));
     }
 
     @Override
     public List<DefectiveRateStatisticDto> getByProductType() {
-        return mapper.mapDefectRates(calculateGroupedDefectRate(ProductKeyMappers.byProductTypeForStatus()));
+        return mapper.mapDefectRates(calculateGroupedDefectRate(ProductItemStatusEntity::getProductTypeKey));
     }
 
     @Override
     public List<DefectiveRateStatisticDto> getByVendorAndProductType() {
-        return mapper.mapDefectRates(calculateGroupedDefectRate(ProductKeyMappers.byVendorAndProductTypeForStatus()));
+        return mapper.mapDefectRates(calculateGroupedDefectRate(ProductItemStatusEntity::getVendorAndProductTypeKey));
     }
 
     public Double getOverallDefectRate() {

@@ -4,7 +4,6 @@ import asset.spy.statistics.service.dto.LostRateStatisticDto;
 import asset.spy.statistics.service.entity.ProductItemStatusEntity;
 import asset.spy.statistics.service.mapper.StatisticsDtoMapper;
 import asset.spy.statistics.service.calculator.ItemRateCalculator;
-import asset.spy.statistics.service.util.ProductKeyMappers;
 import asset.spy.statistics.service.util.StatusPredicates;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,17 +22,17 @@ public class LostRateService implements GroupedStatisticsService<LostRateStatist
 
     @Override
     public List<LostRateStatisticDto> getByVendor() {
-        return mapper.mapLostRates(calculateGroupedLostRate(ProductKeyMappers.byVendorForStatus()));
+        return mapper.mapLostRates(calculateGroupedLostRate(ProductItemStatusEntity::getVendorKey));
     }
 
     @Override
     public List<LostRateStatisticDto> getByProductType() {
-        return mapper.mapLostRates(calculateGroupedLostRate(ProductKeyMappers.byProductTypeForStatus()));
+        return mapper.mapLostRates(calculateGroupedLostRate(ProductItemStatusEntity::getProductTypeKey));
     }
 
     @Override
     public List<LostRateStatisticDto> getByVendorAndProductType() {
-        return mapper.mapLostRates(calculateGroupedLostRate(ProductKeyMappers.byVendorAndProductTypeForStatus()));
+        return mapper.mapLostRates(calculateGroupedLostRate(ProductItemStatusEntity::getVendorAndProductTypeKey));
     }
 
     public Double getOverallLostRate() {

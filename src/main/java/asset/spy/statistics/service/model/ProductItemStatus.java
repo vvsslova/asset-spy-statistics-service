@@ -1,4 +1,4 @@
-package asset.spy.statistics.service.entity;
+package asset.spy.statistics.service.model;
 
 import java.util.Optional;
 

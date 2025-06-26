@@ -34,4 +34,16 @@ public class ProductItemStatusEntity {
     @ManyToOne
     @JoinColumn(name = "product_item_id", nullable = false)
     private ProductItemEntity productItem;
+
+    public String getVendorKey() {
+        return productItem.getProduct().getVendorKey();
+    }
+
+    public String getProductTypeKey() {
+        return productItem.getProduct().getProductTypeKey();
+    }
+
+    public String getVendorAndProductTypeKey() {
+        return getVendorKey() + " - " + getProductTypeKey();
+    }
 }

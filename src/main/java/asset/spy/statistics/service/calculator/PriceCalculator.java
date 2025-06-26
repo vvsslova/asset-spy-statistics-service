@@ -37,7 +37,8 @@ public class PriceCalculator implements StatisticsCalculator<ProductEntity, BigD
         Map<String, List<BigDecimal>> grouped = new HashMap<>();
 
         for (ProductEntity product : products) {
-            grouped.computeIfAbsent(keyMapper.apply(product), k -> new ArrayList<>()).add(product.getPrice());
+            grouped.computeIfAbsent(keyMapper.apply(product), k -> new ArrayList<>())
+                    .add(product.getPrice());
         }
         return grouped.entrySet().stream()
                 .collect(Collectors.toMap(
