@@ -1,5 +1,8 @@
 server:
   port: 8089
+  servlet:
+    context-path: /statistics-service
+  forward-headers-strategy: framework
 
 spring:
   datasource:
@@ -17,3 +20,9 @@ spring:
         default_schema: asset_spy_products_service_db
         format_sql: true
     show-sql: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
